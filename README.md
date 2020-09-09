@@ -1,6 +1,6 @@
 # zx player 
 
-Music player write in java.
+Music player writed in java.
 
 play music from terminal
 
