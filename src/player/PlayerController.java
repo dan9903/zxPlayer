@@ -1,50 +1,103 @@
 package player;
 
-import javazoom.jl.player.Player;
-import java.io.InputStream;
 import java.io.FileInputStream;
+import java.io.InputStream;
 
-public class PlayerController {
+import javazoom.jl.player.advanced.AdvancedPlayer;
+
+enum Statuses { PLAYING, PAUSED, STOPPED }
+
+public class PlayerController implements IPlayer, Runnable {
   private Playlist playlist;
-  private boolean playing;
-  private Player player;
+  private AdvancedPlayer player;
+  private Thread playerThread;
+  private PauseController pc;
+  private Statuses status;
 
   public PlayerController(Playlist a_playlist) {
-    this.playlist = a_playlist;
-    this.playing = false;
+    playlist = a_playlist;
+    status = Statuses.STOPPED;
+    playerThread = null;
+    pc = new PauseController();
   }
 
+  public void run() {
+    createPlayer();
+  }
+  
   public boolean isPlaying() {
-    return this.playing;
+    return status == Statuses.PLAYING;
   }
 
-  public boolean next() {
-    int current = this.playlist.getCurrentSong();
-    this.playing = this.playlist.setCurrentSong(++current);
-    return this.playing;
+  public void next() {
+    if(status == Statuses.PLAYING || status == Statuses.PAUSED) {
+      if (!playlist.isEmpty()){
+        int current = playlist.getCurrentSong();
+        status = playlist.setCurrentSong(++current) ? Statuses.PLAYING : Statuses.STOPPED;
+      }
+    }
   }
 
-  public boolean previous() {
-    int current = this.playlist.getCurrentSong();
-    this.playing =  this.playlist.setCurrentSong(--current);
-    return this.playing;
+  public void previous() {
+    if(status == Statuses.PLAYING || status == Statuses.PAUSED) {
+      if (!playlist.isEmpty()){
+        int current = playlist.getCurrentSong();
+        status = playlist.setCurrentSong(--current)? Statuses.PLAYING: Statuses.STOPPED;
+      }
+    }
   }
 
   public void play(){
-    this.playing = true;
-    if (this.playlist.getCurrentSong() == -1)
-      this.playing = this.playlist.setCurrentSong(0);
-      try {
-        InputStream stream = new FileInputStream("/home/han/Workspace/CARREIRA_COMECA_AQUI/zxPlayer/audio-source/LUCKHAOS.mp3");
-        this.player = new Player(stream);
-        this.player.play();
-      } catch (Exception e) {
-        System.out.println( e.getMessage() );
-      }
+    if (status != Statuses.PLAYING) {
+      if (!playlist.isEmpty())
+        if (playlist.getCurrentSong() == -1 )
+          playlist.setCurrentSong(0);
+      createPlayThread();
+    }
   }
 
   public void pause() {
-    this.playing = false;
+    if (status == Statuses.PLAYING) {
+      player.stop();
+      status = Statuses.PAUSED;
+    }
+  }      
+  
+  public void stop() {
+    player.close();
+    playerThread.interrupt();
+    playerThread = null;
+    player = null;
+    playlist.clear();
+    status = Statuses.STOPPED;
   }
 
+  private void createPlayThread() {
+    try {
+      playerThread = new Thread(this);
+      playerThread.start();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+  }
+  
+  private void createPlayer() {
+    try {
+      String path = playlist.getCurrentSongName();
+      InputStream fis = new FileInputStream(path);
+      player = new AdvancedPlayer(fis);
+      player.setPlayBackListener(pc);
+      fis = null; 
+      if (status == Statuses.STOPPED) {
+          status = Statuses.PLAYING;
+          player.play();
+      } else {
+          status = Statuses.PLAYING;
+          int aa = pc.getEvent().getFrame();
+          player.play(aa, aa+ 1000 );
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }
