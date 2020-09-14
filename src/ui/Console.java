@@ -6,29 +6,36 @@ import java.util.Scanner;
 import player.IPlayer;
 import player.PlayerController;
 import player.Playlist;
+import java.util.List;
 
 public class Console implements IUserInterface{
   private IPlayer player;
+  private Playlist list;
+  private String message;
 
   public Console() {
-    Playlist list  = new Playlist();
+    list  = new Playlist();
     list.readFrom("audio-source");
-    this.player = new PlayerController(list);
+    player = new PlayerController(list);
+    message = "";
   }
 
   public void run() {
-    keyboardInput();
-  }
-  
-  private void keyboardInput(){
-    String userInput = new String();
     Scanner keyboard = new Scanner(System.in);
     do {
-      userInput = keyboard.nextLine();
-      userInput = userInput.toUpperCase();  
-    } while (playerActions(userInput));
+      draw(list);
+      message = "";
+    } while (keyboardInput(keyboard));
+    
     keyboard.close();
     keyboard = null;
+  }
+  
+  private boolean keyboardInput(Scanner keyboard) {
+    String userInput = new String();
+    userInput = keyboard.nextLine();
+    userInput = userInput.toUpperCase();  
+    return playerActions(userInput);
   }
 
   private boolean playerActions(String a_userInput) {
@@ -46,15 +53,31 @@ public class Console implements IUserInterface{
         player.previous();
         break;
       case "STOP":
-        this.player.stop();
+        player.stop();
         break;
       case "Q":
-        System.out.println("exit...");
+         message = "exit...";
         return false;
       default:
-        System.out.println("command not found");
+        message = "command not found";
         break;
     }
     return true;
+  }
+
+  private void draw(Playlist playlist) {
+    System.out.print("\033[H\033[2J");
+    System.out.println("|-----------------------| zx player |-----------------------|");
+    List<String> list =  playlist.getAllSongNames();
+    int current = playlist.getCurrentSong();
+    for(int i = 0; i < list.size(); i++) {
+      if (i == current) 
+        System.out.print("> ");
+      System.out.println(list.get(i));
+    }
+
+    System.out.print(": ");
+    if (message != "")
+      System.out.print("     "+message);
   }
 }
