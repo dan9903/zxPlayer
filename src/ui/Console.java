@@ -15,13 +15,18 @@ public class Console implements IUserInterface{
 
   public Console() {
     list  = new Playlist();
-    list.readFrom("audio-source");
-    player = new PlayerController(list);
     message = "";
   }
 
   public void run() {
     Scanner keyboard = new Scanner(System.in);
+    String path = new String();
+    System.out.print("|-----------------------| zx player |-----------------------|\npath:");
+    path = keyboard.nextLine();
+    
+    list.readFrom(path);
+    player = new PlayerController(list);
+    
     do {
       draw(list);
       message = "";
@@ -66,6 +71,7 @@ public class Console implements IUserInterface{
   }
 
   private void draw(Playlist playlist) {
+    //comand to clear screen
     System.out.print("\033[H\033[2J");
     System.out.println("|-----------------------| zx player |-----------------------|");
     List<String> list =  playlist.getAllSongNames();
