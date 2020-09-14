@@ -34,16 +34,16 @@ public class Console implements IUserInterface{
   private boolean playerActions(String a_userInput) {
     switch (a_userInput) {
       case "PLAY":
-        this.player.play();
+        player.play();
         break;
       case "PAUSE":
-        this.player.pause();
+        player.pause();
         break;
       case "NEXT":
-        System.out.println("next song");
+        player.next();
         break;
       case "PREVIOUS":
-        System.out.println("previous song");
+        player.previous();
         break;
       case "STOP":
         this.player.stop();
