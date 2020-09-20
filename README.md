@@ -13,6 +13,7 @@ soon:
 This is a test project, created to learn an prove some skills on treinament.
 ps.: sooorry, my english is not so good now, I'm learning.
 
+leia mais um diário sobre o desenvolvimento do projeto no:  https://github.com/dan9903/zxPlayer/blob/master/tracker.md
 
 I'm actually using the lib's:
 
