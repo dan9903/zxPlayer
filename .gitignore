@@ -6,4 +6,5 @@ audio-source/
 src/test/
 screen
 .classpath
+.project
 *.iml
