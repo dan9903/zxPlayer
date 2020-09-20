@@ -1,4 +1,4 @@
-package player;
+package zxPlayer.player;
 
 import java.io.IOException;
 import java.nio.file.Files;

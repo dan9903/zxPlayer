@@ -1,11 +1,11 @@
-package ui;
-
+package zxPlayer.ui;
 
 import java.util.Scanner;
 
-import player.IPlayer;
-import player.PlayerController;
-import player.Playlist;
+import zxPlayer.player.IPlayer;
+import zxPlayer.player.PlayerController;
+import zxPlayer.player.Playlist;
+
 import java.util.List;
 
 public class Console implements IUserInterface{

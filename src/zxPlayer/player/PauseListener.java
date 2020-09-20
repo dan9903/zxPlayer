@@ -1,4 +1,4 @@
-package player;
+package zxPlayer.player;
 
 import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;

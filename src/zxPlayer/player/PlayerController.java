@@ -1,8 +1,7 @@
-package player;
+package zxPlayer.player;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-
 import javazoom.jl.player.advanced.AdvancedPlayer;
 
 enum Statuses { PLAYING, PAUSED, STOPPED }

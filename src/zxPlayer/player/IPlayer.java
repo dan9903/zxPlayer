@@ -1,4 +1,4 @@
-package player;
+package zxPlayer.player;
 
 public interface IPlayer {
   public boolean isPlaying();

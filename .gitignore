@@ -4,4 +4,6 @@ lib/JLayer1.0.1
 audio-source/
 .vscode
 src/test/
-
+screen
+.classpath
+*.iml

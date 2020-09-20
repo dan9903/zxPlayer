@@ -1,6 +1,0 @@
-#!/bin/bash
-
-#change directory
-cd bin
-#run
-java App -jar jl1.0.1.jar
